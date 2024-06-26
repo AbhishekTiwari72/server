@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const User = require('../models/userModel');
 
 const updateUserProfile = async (req, res, next) => {
     try {
@@ -25,8 +25,27 @@ const deleteUserAccount = async (req, res, next) => {
     }
 };
 
+const getUserById = async (req, res, next) => {
+    try {
+        const userId = req.params.id; // Assuming the user ID is passed as a route parameter
+
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const { firstName, lastName, phoneNumber } = user;
+
+        res.status(200).json({ firstName, lastName, phoneNumber });
+    } catch (error) {
+        next(error);
+    }
+};
+
 
 module.exports = {
     updateUserProfile,
-    deleteUserAccount
+    deleteUserAccount,
+    getUserById
 };
